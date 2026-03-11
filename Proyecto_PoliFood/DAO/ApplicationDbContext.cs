@@ -10,7 +10,7 @@ namespace Proyecto_PoliFood.DAO
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
+        //primera version
         public DbSet<Admin> Admin { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
