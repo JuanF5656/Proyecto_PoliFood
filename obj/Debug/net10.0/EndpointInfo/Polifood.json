@@ -122,6 +122,92 @@
   },
   "components": {
     "schemas": {
+      "IdentityUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "userName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "normalizedUserName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "normalizedEmail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "emailConfirmed": {
+            "type": "boolean"
+          },
+          "passwordHash": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "securityStamp": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "concurrencyStamp": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "phoneNumber": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "phoneNumberConfirmed": {
+            "type": "boolean"
+          },
+          "twoFactorEnabled": {
+            "type": "boolean"
+          },
+          "lockoutEnd": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "lockoutEnabled": {
+            "type": "boolean"
+          },
+          "accessFailedCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "LoginDTO": {
         "required": [
           "email",
@@ -173,6 +259,9 @@
         }
       },
       "Student": {
+        "required": [
+          "identityUserId"
+        ],
         "type": "object",
         "properties": {
           "student_id": {
@@ -192,6 +281,22 @@
               "string"
             ],
             "format": "int32"
+          },
+          "identityUserId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "identityUser": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/IdentityUser"
+              }
+            ]
           }
         }
       }
@@ -208,10 +313,10 @@
       "name": "Cart"
     },
     {
-      "name": "Client"
+      "name": "Student"
     },
     {
-      "name": "Student"
+      "name": "Vendor"
     }
   ]
 }

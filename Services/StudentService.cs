@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Polifood.Interfaces;
 using Polifood.Models;
-
+using Polifood.DAO;
 namespace Polifood.Services
 {
     public class StudentService : IStudentService

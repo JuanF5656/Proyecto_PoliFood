@@ -10,6 +10,7 @@ using Polifood.Interfaces;
 using Scalar.AspNetCore;
 using System.Text;
 using ApiConciertos.Services;
+using Polifood.DAO;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

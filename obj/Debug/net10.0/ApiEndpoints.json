@@ -52,16 +52,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Polifood.Controllers.ClientController",
-    "Method": "Index",
-    "RelativePath": "api/Client",
-    "HttpMethod": "",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "Polifood.Controllers.StudentController",
     "Method": "Index",
     "RelativePath": "api/Student",
@@ -95,6 +85,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Polifood.Controllers.VendorController",
+    "Method": "Index",
+    "RelativePath": "api/Vendor",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   }
 ]

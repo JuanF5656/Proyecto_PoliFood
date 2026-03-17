@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
 
 namespace Polifood.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ClientController : Controller
+    [Authorize(Roles ="Admin,Vendor")]
+    public class VendorController : Controller
     {
         private readonly IVendorService _vendorService;
         
-        public ClientController(IVendorService vendorService)
+        public VendorController(IVendorService vendorService)
         {
             _vendorService = vendorService;
         }

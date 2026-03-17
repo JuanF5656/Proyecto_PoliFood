@@ -14,6 +14,7 @@ namespace Polifood.Controllers
         {
             _adminService = adminService;
         }
+
         public IActionResult Index()
         {
             return View();

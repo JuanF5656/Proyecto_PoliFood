@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
 using Polifood.Models;
 using Polifood.Services;
@@ -7,6 +8,7 @@ namespace Polifood.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles ="Admin")]
     public class StudentController : Controller
     {
         private readonly IStudentService _studentService;
