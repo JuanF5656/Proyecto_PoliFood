@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Polifood.Models
 {
@@ -9,7 +10,11 @@ namespace Polifood.Models
         public string store_name { get; set; }
 
         public string categories { get; set; }
-        public Product product { get; set; } = new Product();
+        [Required]
+        public Guid product_id { get; set; }
+
+        [ForeignKey("productId")]
+        public Product product { get; set; }
 
         public int is_active { get; set; }
 
