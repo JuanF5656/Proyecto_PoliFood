@@ -1,6 +1,10 @@
 ﻿namespace Polifood.Models
 {
-    public class OrderStatus
+    public enum OrderStatus
     {
+        Received,
+        Preparing,
+        Ready,
+        Delivered
     }
 }

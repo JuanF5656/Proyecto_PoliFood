@@ -3,18 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Polifood.Models;
 
 
-    public class AuthDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext
 {
-        public AuthDbContext(DbContextOptions<AuthDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
     
         public DbSet<Admin> Admin { get; set; }
-    public DbSet<Cart> Carts { get; set; }
-    public DbSet<Order> Orders { get; set; }
-    public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Store> Stores { get; set; }
-    public DbSet<Student> Students { get; set; }
-    public DbSet<Vendor> Vendors { get; set; }
+    public DbSet<Cart> Cart { get; set; }
+    public DbSet<Order> Order { get; set; }
+    public DbSet<OrderItem> OrderItem { get; set; }
+    public DbSet<Product> Product { get; set; }
+    public DbSet<Store> Store { get; set; }
+    public DbSet<Student> Student { get; set; }
+    public DbSet<Vendor> Vendor { get; set; }
 
 }

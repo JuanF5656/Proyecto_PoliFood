@@ -14,6 +14,6 @@ namespace Polifood.Models.DTOs
         public string Password { get; set; } = null!;
 
         [Required]
-        public string Role { get; set; } = "User"; // Por defecto asignamos User
+        public string Role { get; set; } = "Student"; // Por defecto asignamos Student
     }
 }
