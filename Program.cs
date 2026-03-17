@@ -1,16 +1,17 @@
 
-using Polifood.Interfaces;
-
+using ApiConciertos.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Polifood.DAO;
 using Polifood.Interfaces;
+using Polifood.Interfaces;
+using Polifood.Models;
+using Polifood.Services;
 using Scalar.AspNetCore;
 using System.Text;
-using ApiConciertos.Services;
-using Polifood.DAO;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -52,8 +53,68 @@ builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
+builder.Services.AddScoped<IStudentService, StudentService>();
 var app = builder.Build();
+
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var dbContext = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    await dbContext.Database.MigrateAsync();
+    await SeedUsersAndRoles(userManager, roleManager, dbContext);
+}
+static async Task SeedUsersAndRoles(
+    UserManager<IdentityUser> userManager,
+    RoleManager<IdentityRole> roleManager,
+    ApplicationDbContext dbContext)
+{
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    var email = "admin@polifood.com";
+    var user = await userManager.FindByEmailAsync(email);
+
+    if (user == null)
+    {
+        user = new IdentityUser
+        {
+            UserName = email,
+            Email = email,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(user, "Admin123*");
+
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(user, "Admin");
+
+            var adminExiste = await dbContext.Admin.AnyAsync(a => a.IdentityUserId == user.Id);
+
+            if (!adminExiste)
+            {
+                dbContext.Admin.Add(new Admin
+                {
+                    admin_id = Guid.Parse("11111111-1111-1111-1111-111111111112"),
+                    name_admin = "Simon",
+                    is_active = 1,
+                    IdentityUserId = user.Id
+                });
+
+                await dbContext.SaveChangesAsync();
+            }
+        }
+    }
+}
 
 
 // Configure the HTTP request pipeline.

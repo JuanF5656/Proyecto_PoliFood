@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Polifood.DAO;
 
@@ -11,9 +12,11 @@ using Polifood.DAO;
 namespace Polifood.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260317183227_migracionesConSemillas")]
+    partial class migracionesConSemillas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,6 +163,56 @@ namespace Polifood.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "99999999-9999-9999-9999-999999999991",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c1c1c1c1-1111-1111-1111-111111111111",
+                            Email = "admin@polifood.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@POLIFOOD.COM",
+                            NormalizedUserName = "ADMIN@POLIFOOD.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPvFakeHashAdmin123!",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "s1s1s1s1-1111-1111-1111-111111111111",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@polifood.com"
+                        },
+                        new
+                        {
+                            Id = "99999999-9999-9999-9999-999999999992",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c2c2c2c2-2222-2222-2222-222222222222",
+                            Email = "student@polifood.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "STUDENT@POLIFOOD.COM",
+                            NormalizedUserName = "STUDENT@POLIFOOD.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPvFakeHashStudent123!",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "s2s2s2s2-2222-2222-2222-222222222222",
+                            TwoFactorEnabled = false,
+                            UserName = "student@polifood.com"
+                        },
+                        new
+                        {
+                            Id = "99999999-9999-9999-9999-999999999993",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c3c3c3c3-3333-3333-3333-333333333333",
+                            Email = "vendor@polifood.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "VENDOR@POLIFOOD.COM",
+                            NormalizedUserName = "VENDOR@POLIFOOD.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPvFakeHashVendor123!",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "s3s3s3s3-3333-3333-3333-333333333333",
+                            TwoFactorEnabled = false,
+                            UserName = "vendor@polifood.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -222,6 +275,23 @@ namespace Polifood.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "99999999-9999-9999-9999-999999999991",
+                            RoleId = "11111111-1111-1111-1111-111111111111"
+                        },
+                        new
+                        {
+                            UserId = "99999999-9999-9999-9999-999999999992",
+                            RoleId = "22222222-2222-2222-2222-222222222222"
+                        },
+                        new
+                        {
+                            UserId = "99999999-9999-9999-9999-999999999993",
+                            RoleId = "33333333-3333-3333-3333-333333333333"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

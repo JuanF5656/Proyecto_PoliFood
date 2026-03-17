@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
 using Polifood.Models.DTOs;
 
@@ -7,13 +8,14 @@ using Polifood.Models.DTOs;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, UserManager<IdentityUser> userManager)
     {
         _authService = authService;
+        _userManager = userManager;
     }
 
-    // ENDPOINT PARA REGISTRO
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO model)
     {
@@ -21,13 +23,18 @@ public class AuthController : ControllerBase
 
         if (result.Succeeded)
         {
-            return Ok(new { Message = $"Usuario {model.Email} creado con éxito." });
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            return Ok(new
+            {
+                Message = $"Usuario {model.Email} creado con éxito.",
+                UserId = user!.Id
+            });
         }
 
         return BadRequest(result.Errors);
     }
 
-    // ENDPOINT PARA LOGIN
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {

@@ -32,9 +32,9 @@ namespace Polifood.DAO
             string adminRoleId = "11111111-1111-1111-1111-111111111111";
             string studentRoleId = "22222222-2222-2222-2222-222222222222";
             string vendorRoleId = "33333333-3333-3333-3333-333333333333";
-
+            IdentityRole role;
             builder.Entity<IdentityRole>().HasData(
-         new IdentityRole
+         role = new IdentityRole
          {
              Id = adminRoleId,
              Name = "Admin",
@@ -56,7 +56,25 @@ namespace Polifood.DAO
              ConcurrencyStamp = "c3c3c3c3-3333-3333-3333-333333333333"
          }
      );
+            var adminUserId = "99999999-9999-9999-9999-999999999991";
+            var studentUserId = "99999999-9999-9999-9999-999999999992";
+            var vendorUserId = "99999999-9999-9999-9999-999999999993";
 
+          
+           
+            var adminId =Guid.Parse("11111111-1111-1111-1111-111111111112");
+            
+            builder.Entity<Admin>().HasData(
+                    new Admin
+                {
+                    admin_id = adminId,
+                    name_admin = "Simon",
+                    is_active = 1,
+                    IdentityUserId = adminUserId
+
+                }
+               
+                );
 
             // =========================
             // IDS FIJOS
