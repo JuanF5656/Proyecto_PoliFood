@@ -1,6 +1,6 @@
 ﻿namespace Polifood.Interfaces
 {
-    public interface IVendorService
+    public interface IProductService
     {
         Task<List<Product>> GetAll();
         Task<Product?> getById(Guid id);
