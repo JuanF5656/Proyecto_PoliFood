@@ -1,4 +1,4 @@
-﻿namespace Proyecto_PoliFood.Models
+﻿namespace Polifood.Models
 {
     public class Product
     {
