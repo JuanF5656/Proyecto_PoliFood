@@ -7,11 +7,11 @@ namespace Polifood.Controllers
     [Route("api/[controller]")]
     public class ClientController : Controller
     {
-        private readonly IClientService _clientService;
+        private readonly IVendorService _vendorService;
         
-        public ClientController(IClientService clientService)
+        public ClientController(IVendorService vendorService)
         {
-            _clientService = clientService;
+            _vendorService = vendorService;
         }
         public IActionResult Index()
         {

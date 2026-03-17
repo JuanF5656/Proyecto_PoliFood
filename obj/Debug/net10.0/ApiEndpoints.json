@@ -1,5 +1,15 @@
 [
   {
+    "ContainingType": "Polifood.Controllers.AdminController",
+    "Method": "Index",
+    "RelativePath": "api/Admin",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
@@ -26,6 +36,62 @@
       {
         "Name": "model",
         "Type": "Polifood.Models.DTOs.RegisterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Polifood.Controllers.CartController",
+    "Method": "Index",
+    "RelativePath": "api/Cart",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Polifood.Controllers.ClientController",
+    "Method": "Index",
+    "RelativePath": "api/Client",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Polifood.Controllers.StudentController",
+    "Method": "Index",
+    "RelativePath": "api/Student",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Polifood.Controllers.StudentController",
+    "Method": "GetAll",
+    "RelativePath": "api/Student",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Polifood.Controllers.StudentController",
+    "Method": "Create",
+    "RelativePath": "api/Student",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newStudent",
+        "Type": "Polifood.Models.Student",
         "IsRequired": true
       }
     ],

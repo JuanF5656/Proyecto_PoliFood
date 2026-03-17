@@ -76,6 +76,48 @@
           }
         }
       }
+    },
+    "/api/Student": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -88,10 +130,16 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "password": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -104,14 +152,46 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "password": {
             "minLength": 8,
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "role": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "Student": {
+        "type": "object",
+        "properties": {
+          "student_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "student_name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "is_active": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       }
@@ -120,6 +200,18 @@
   "tags": [
     {
       "name": "Auth"
+    },
+    {
+      "name": "Admin"
+    },
+    {
+      "name": "Cart"
+    },
+    {
+      "name": "Client"
+    },
+    {
+      "name": "Student"
     }
   ]
 }

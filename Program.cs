@@ -12,7 +12,7 @@ using System.Text;
 using ApiConciertos.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<AuthDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -22,7 +22,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
 })
-.AddEntityFrameworkStores<AuthDbContext>()
+.AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options => {

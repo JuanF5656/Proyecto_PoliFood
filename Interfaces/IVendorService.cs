@@ -1,6 +1,6 @@
 ﻿namespace Polifood.Interfaces
 {
-    public interface IClientService
+    public interface IVendorService
     {
     }
 }
