@@ -29,7 +29,7 @@ namespace Polifood.Controllers
         public async Task<IActionResult> getById(Guid id)
         {
             var admin = await _adminService.getById(id);
-            return admin != null ? Ok(evento) : NotFound();
+            return admin != null ? Ok(admin) : NotFound();
            
         }
 
