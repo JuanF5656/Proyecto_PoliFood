@@ -1,0 +1,6 @@
+@Polifood_HostAddress = http://localhost:5149
+
+GET {{Polifood_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
