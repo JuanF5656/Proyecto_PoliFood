@@ -12,9 +12,11 @@ namespace Polifood.Models
 
         public Guid ProductId { get; set; }
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }  
+        public Product Product { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "El valor debe ser positivo")]
         public int Quantity { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "El valor debe ser positivo")]
         public decimal UnitPrice { get; set; } 
     }
 

@@ -12,10 +12,13 @@ namespace Polifood.Models
         [ForeignKey("OrderId")]
         public Order order { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "El valor debe ser positivo")]
         public int Quantity { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "El valor debe ser positivo")]
         public decimal UnitPrice { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "El valor debe ser positivo")]
         public decimal Subtotal { get; set; }
 
         [Required]

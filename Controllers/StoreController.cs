@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
 using Polifood.Models;
 
@@ -33,6 +34,7 @@ namespace Polifood.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles ="Vendor, Admin")]
         public async Task<IActionResult> Create([FromBody] Store newStore)
         {
 
@@ -41,6 +43,7 @@ namespace Polifood.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Vendor, Admin")]
         public async Task<IActionResult> Edit(Guid id, [FromBody] Store editedStore)
         {
 
@@ -48,6 +51,7 @@ namespace Polifood.Controllers
         }
 
         [HttpPatch("{id}/change-status")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ChangeStatus(Guid id)
         {
             return await _storeService.ChangeStatus(id) ? Ok("Se ha cambiado el estado de la orden") : NotFound();

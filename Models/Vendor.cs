@@ -11,6 +11,7 @@ namespace Polifood.Models
 
         public Guid vendor_id { get; set; } = Guid.NewGuid();
 
+        [Required]
         public string vendor_name { get; set; }
         public int is_active { get; set; }
         public Store store {  get; set; }

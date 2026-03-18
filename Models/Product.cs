@@ -6,11 +6,14 @@ namespace Polifood.Models
     {
         [Key]
         public Guid product_id { get; set; } = Guid.NewGuid();
-    
+
+        [Required]
         public string product_name { get; set; }
-    
+
+        [MinLength(10)]
         public string product_description { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "El valor debe ser positivo")]
         public int product_price { get; set; }
 
      
@@ -20,6 +23,7 @@ namespace Polifood.Models
 
         public bool is_available { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "El valor debe ser positivo")]
         public int prepTimeMinutes { get; set; }
 
     }

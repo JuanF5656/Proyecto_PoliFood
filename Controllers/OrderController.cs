@@ -35,6 +35,7 @@ namespace Polifood.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] Order newOrder)
         {
 
@@ -43,6 +44,7 @@ namespace Polifood.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Vendor, Admin")]
         public async Task<IActionResult> Edit(Guid id, [FromBody] Order editedOrder)
         {
 
@@ -50,6 +52,7 @@ namespace Polifood.Controllers
         }
 
         [HttpPatch("{id}/change-status")]
+        [Authorize(Roles = "Vendor, Admin")]
         public async Task<IActionResult> ChangeStatus(Guid id)
         {
             return await _orderService.ChangeStatus(id) ? Ok("Se ha cambiado el estado de la orden") : NotFound();

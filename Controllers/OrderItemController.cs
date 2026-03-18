@@ -21,7 +21,7 @@ namespace Polifood.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> GetAll() => Ok(await _orderItemService.GetAll());
 
         [HttpGet("{id}")]

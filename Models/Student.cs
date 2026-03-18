@@ -12,6 +12,7 @@ namespace Polifood.Models
 
         public Guid student_id { get; set; } = Guid.NewGuid();
 
+        [Required]
         public string student_name { get; set; }
         public int is_active { get; set; }
        
