@@ -14,7 +14,7 @@ namespace Polifood.Models
         public Guid product_id { get; set; }
 
         [ForeignKey("productId")]
-        public Product product { get; set; }
+        public List<Product> products { get; set; }
 
         public int is_active { get; set; }
 
