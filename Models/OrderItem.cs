@@ -12,6 +12,12 @@ namespace Polifood.Models
         [ForeignKey("OrderId")]
         public Order order { get; set; }
 
+        public int Quantity { get; set; }
+
+        public decimal UnitPrice { get; set; }
+
+        public decimal Subtotal { get; set; }
+
         [Required]
         public Guid product_id { get; set; }
         [ForeignKey("product_id")]

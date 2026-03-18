@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
 using Polifood.Models;
+using Polifood.Models.DTOs;
 
 namespace Polifood.Controllers
 {
@@ -58,7 +59,7 @@ namespace Polifood.Controllers
         [HttpPost("{id}/add-item")]
         public async Task<IActionResult> AddItem(Guid id, [FromBody] CartItemDto dto)
         {
-            var success = await _cartService.AddItem(id, dto.product_id, dto.Quantity);
+            var success = await _cartService.AddItem(id, dto.ProductId, dto.Quantity);
             return success ? Ok() : BadRequest("no se pudo agregar el producto");
         }
 
@@ -72,7 +73,7 @@ namespace Polifood.Controllers
         [HttpPatch("{id}/update-quantity")]
         public async Task<IActionResult> UpdateQuantity(Guid id, [FromBody] CartItemDto dto)
         {
-            var success = await _cartService.UpdateQuantity(id, dto.product_id, dto.Quantity);
+            var success = await _cartService.UpdateQuantity(id, dto.ProductId, dto.Quantity);
             return success ? Ok() : BadRequest("Could not update quantity");
         }
 

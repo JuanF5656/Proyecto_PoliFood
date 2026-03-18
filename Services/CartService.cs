@@ -37,7 +37,7 @@ namespace Polifood.Services
             var CartExist = await getById(id);
             if (CartExist == null) return false;
 
-            CartExist.products = editCart.products;
+            CartExist.items = editCart.items;
 
             await _context.SaveChangesAsync();
 
@@ -62,14 +62,14 @@ namespace Polifood.Services
             var cart = await getById(cartId);
             if (cart == null) return false;
 
-            var product = await _context.Products.FindAsync(product_id);
-            if (product == null || !product.Available) return false;
+            var product = await _context.Product.FindAsync(product_id);
+            if (product == null || !product.is_available) return false;
 
-            var existingItem = cart.Items.FirstOrDefault(i => i.product_id == product_id);
+            var existingItem = cart.items.FirstOrDefault(i => i.ProductId == product_id);
             if (existingItem != null)
                 existingItem.Quantity += quantity;
             else
-                cart.Items.Add(new CartItem { Product_id = product_id, Quantity = quantity, UnitPrice = product.Price });
+                cart.items.Add(new CartItem { ProductId = product_id, Quantity = quantity, UnitPrice = product.product_price });
 
             await _context.SaveChangesAsync();
             return true;
@@ -77,26 +77,26 @@ namespace Polifood.Services
 
         public async Task<bool> RemoveItem(Guid cartId, Guid productId)
         {
-            var cart = await GetById(cartId);
+            var cart = await getById(cartId);
             if (cart == null) return false;
 
-            var item = cart.Items.FirstOrDefault(i => i.product_id == productId);
+            var item = cart.items.FirstOrDefault(i => i.ProductId == productId);
             if (item == null) return false;
 
-            cart.Items.Remove(item);
+            cart.items.Remove(item);
             await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> UpdateQuantity(Guid cartId, Guid productId, int quantity)
         {
-            var cart = await GetById(cartId);
+            var cart = await getById(cartId);
             if (cart == null) return false;
 
-            var item = cart.Items.FirstOrDefault(i => i.product_id == productId);
+            var item = cart.items.FirstOrDefault(i => i.ProductId == productId);
             if (item == null) return false;
 
-            if (quantity <= 0) cart.Items.Remove(item);
+            if (quantity <= 0) cart.items.Remove(item);
             else item.Quantity = quantity;
 
             await _context.SaveChangesAsync();
@@ -105,33 +105,34 @@ namespace Polifood.Services
 
         public async Task<Order> Checkout(Guid cartId)
         {
-            var cart = await GetById(cartId);
-            if (cart == null || !cart.Items.Any()) throw new InvalidOperationException("Carrito vacio");
+            var cart = await getById(cartId);
+            if (cart == null || !cart.items.Any()) throw new InvalidOperationException("Carrito vacio");
 
-            var total = cart.Items.Sum(i => i.UnitPrice * i.Quantity);
+            var total = cart.items.Sum(i => i.UnitPrice * i.Quantity);
 
             var order = new Order
             {
                 Id = Guid.NewGuid(),
                 CartId = cart.Id,
-                Items = cart.Items.Select(i => new OrderItem
+                orderItems = cart.items.Select(i => new OrderItem
                 {
-                    ProductId = i.ProductId,
+                    product_id = i.ProductId,
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     Subtotal = i.UnitPrice * i.Quantity
                 }).ToList(),
                 Total = total,
-                Status = "Received"
+                status = OrderStatus.Received
             };
 
-            _context.Orders.Add(order);
+            _context.Order.Add(order);
             await _context.SaveChangesAsync();
 
             return order;
+        }
         }
 
 
 
     }
-}
+

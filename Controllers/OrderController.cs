@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Polifood.Models;
 
 namespace Polifood.Controllers
 {
