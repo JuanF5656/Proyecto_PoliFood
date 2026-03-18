@@ -6,7 +6,7 @@ namespace Polifood.Models
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
-        public List<Product> products { get; set; } = new List<Product>();
+        public List<CartItem> items { get; set; } = new List<CartItem>();
         public int is_active { get; set; }
     }
 }

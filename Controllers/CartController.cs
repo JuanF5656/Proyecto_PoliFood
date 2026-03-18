@@ -54,5 +54,41 @@ namespace Polifood.Controllers
         {
             return await _cartService.ChangeStatus(id) ? Ok("Se ha cambiado el estado del carrito") : NotFound();
         }
+
+        [HttpPost("{id}/add-item")]
+        public async Task<IActionResult> AddItem(Guid id, [FromBody] CartItemDto dto)
+        {
+            var success = await _cartService.AddItem(id, dto.product_id, dto.Quantity);
+            return success ? Ok() : BadRequest("no se pudo agregar el producto");
+        }
+
+        [HttpDelete("{id}/remove-item/{product_id}")]
+        public async Task<IActionResult> RemoveItem(Guid id, Guid productId)
+        {
+            var success = await _cartService.RemoveItem(id, productId);
+            return success ? Ok() : NotFound();
+        }
+
+        [HttpPatch("{id}/update-quantity")]
+        public async Task<IActionResult> UpdateQuantity(Guid id, [FromBody] CartItemDto dto)
+        {
+            var success = await _cartService.UpdateQuantity(id, dto.product_id, dto.Quantity);
+            return success ? Ok() : BadRequest("Could not update quantity");
+        }
+
+        [HttpPost("{id}/checkout")]
+        public async Task<IActionResult> Checkout(Guid id)
+        {
+            try
+            {
+                var order = await _cartService.Checkout(id);
+                return Ok(order);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
