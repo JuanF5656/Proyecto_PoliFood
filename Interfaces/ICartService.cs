@@ -1,9 +1,11 @@
-﻿namespace Polifood.Interfaces
+﻿using Polifood.Models;
+
+namespace Polifood.Interfaces
 {
     public interface ICartService
     {
         Task<List<Cart>> GetAll();
-        Task<Cart?> getById(Guid id);
+        Task<Cart> getById(Guid id);
 
         Task<Cart> Create(Cart cart);
 

@@ -1,9 +1,11 @@
-﻿namespace Polifood.Interfaces
+﻿using Polifood.Models;
+
+namespace Polifood.Interfaces
 {
     public interface IAdminService
     {
         Task<List<Admin>> GetAll();
-        Task<Admin?> getById(Guid id);
+        Task<Admin> getById(Guid id);
 
         Task<Admin> Create(Admin admin);
 

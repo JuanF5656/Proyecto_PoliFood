@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
+using Polifood.Models;
 
 namespace Polifood.Controllers
 {

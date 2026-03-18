@@ -16,7 +16,7 @@ namespace Polifood.Services
 
         public async Task<List<OrderItem>> GetAll()
         {
-            return await _context.OrderItem.Where(e => e.isActive == 1).ToListAsync();
+            return await _context.OrderItem.Where(e => e.is_active == 1).ToListAsync();
         }
 
         public async Task<OrderItem> getById(Guid id) => await _context.OrderItem.FindAsync(id);
@@ -51,7 +51,7 @@ namespace Polifood.Services
             var existe = await getById(id);
             if (existe == null) return false;
 
-            existe.isActive = existe.isActive == 1 ? 0 : 1;
+            existe.is_active = existe.is_active == 1 ? 0 : 1;
 
             await _context.SaveChangesAsync();
 
