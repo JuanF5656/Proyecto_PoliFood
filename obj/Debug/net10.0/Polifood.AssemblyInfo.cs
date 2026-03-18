@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Polifood")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+344713d2fdf49b868a0a816fe20863228b26da06")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f1bcd174043f9abf574b1769dad3afaa9e652e2d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Polifood")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Polifood")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

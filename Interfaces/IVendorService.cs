@@ -1,13 +1,15 @@
-﻿namespace Polifood.Interfaces
+﻿using Polifood.Models;
+
+namespace Polifood.Interfaces
 {
     public interface IVendorService
     {
-        Task<List<Product>> GetAll();
-        Task<Product?> getById(Guid id);
+        Task<List<Vendor>> GetAll();
+        Task<Vendor> getById(Guid id);
 
-        Task<Product> Create(Product product);
+        Task<Vendor> Create(Vendor vendor);
 
-        Task<bool> Update(Guid id, Product product);
+        Task<bool> Update(Guid id, Vendor vendor);
 
         Task<bool> ChangeStatus(Guid id);
     }

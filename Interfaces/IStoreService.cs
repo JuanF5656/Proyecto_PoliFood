@@ -1,9 +1,11 @@
-﻿namespace Polifood.Interfaces
+﻿using Polifood.Models;
+
+namespace Polifood.Interfaces
 {
     public interface IStoreService
     {
         Task<List<Store>> GetAll();
-        Task<Store?> getById(Guid id);
+        Task<Store> getById(Guid id);
 
         Task<Store> Create(Store store);
 

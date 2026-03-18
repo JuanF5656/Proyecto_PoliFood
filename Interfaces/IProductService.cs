@@ -1,4 +1,6 @@
-﻿namespace Polifood.Interfaces
+﻿using Polifood.Models;
+
+namespace Polifood.Interfaces
 {
     public interface IProductService
     {
