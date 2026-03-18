@@ -50,6 +50,13 @@ namespace Polifood.Controllers
         {
             return await _orderService.ChangeStatus(id) ? Ok("Se ha cambiado el estado de la orden") : NotFound();
         }
+
+        [HttpPost("{id}/confirm-payment")]
+        public async Task<IActionResult> ConfirmPayment(Guid id)
+        {
+            var success = await _orderService.ConfirmPayment(id);
+            return success ? Ok("Payment confirmed (simulated)") : NotFound();
+        }
     }
 }
 

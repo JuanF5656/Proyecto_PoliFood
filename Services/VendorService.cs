@@ -35,9 +35,9 @@ namespace Polifood.Services
             if (VendorExist == null) return false;
 
             VendorExist.vendor_name = editVendor.vendor_name;
-            VendorExist.vendor_id= editVendor.vendor_id;
+            VendorExist.vendor_id = editVendor.vendor_id;
             VendorExist.IdentityUser = editVendor.IdentityUser;
-            VendorExist.IdentityUserId= editVendor.IdentityUserId;
+            VendorExist.IdentityUserId = editVendor.IdentityUserId;
             VendorExist.store = editVendor.store;
             await _context.SaveChangesAsync();
 

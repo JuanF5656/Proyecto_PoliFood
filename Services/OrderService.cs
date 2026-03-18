@@ -57,5 +57,18 @@ namespace Polifood.Services
 
             return true;
         }
+
+        public async Task<bool> ConfirmPayment(Guid orderId)
+        {
+            var order = await _context.Order.FindAsync(orderId);
+            if (order == null) return false;
+
+            order.IsPaid = true;
+            order.PaymentConfirmedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

@@ -11,5 +11,9 @@ namespace Polifood.Models
         public List<OrderItem> orderItems { get; set; }
         public OrderStatus status { get; set; }
 
+        public bool IsPaid { get; set; } = false;
+        public DateTime? PaymentConfirmedAt { get; set; }
+     
+
     }
 }

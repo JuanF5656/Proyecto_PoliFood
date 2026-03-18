@@ -10,5 +10,8 @@
         Task<bool> Update(Guid id, Order order);
 
         Task<bool> ChangeStatus(Guid id);
+
+        Task<bool> ConfirmPayment(Guid orderId);
+
     }
 }
