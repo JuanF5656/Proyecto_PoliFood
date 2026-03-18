@@ -1,12 +1,9 @@
-
 using ApiConciertos.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Polifood.DAO;
-using Polifood.Interfaces;
 using Polifood.Interfaces;
 using Polifood.Models;
 using Polifood.Services;
@@ -14,10 +11,17 @@ using Scalar.AspNetCore;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// =========================
+// DB CONTEXT
+// =========================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// =========================
+// IDENTITY
+// =========================
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -27,11 +31,16 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options => {
+// =========================
+// AUTHENTICATION JWT
+// =========================
+builder.Services.AddAuthentication(options =>
+{
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(options => {
+.AddJwtBearer(options =>
+{
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -45,19 +54,28 @@ builder.Services.AddAuthentication(options => {
     };
 });
 
-// Add services to the container.
+// =========================
+// AUTHORIZATION
+// =========================
+builder.Services.AddAuthorization();
 
+// =========================
+// SERVICES
+// =========================
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-builder.Services.AddControllers();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 builder.Services.AddScoped<IStudentService, StudentService>();
+
+// =========================
+// CONTROLLERS + OPENAPI
+// =========================
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
+
 var app = builder.Build();
 
-
-
+// =========================
+// SEED ADMIN INICIAL
+// =========================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -69,17 +87,23 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
     await SeedUsersAndRoles(userManager, roleManager, dbContext);
 }
+
 static async Task SeedUsersAndRoles(
     UserManager<IdentityUser> userManager,
     RoleManager<IdentityRole> roleManager,
     ApplicationDbContext dbContext)
 {
-
+    // Crear roles si no existen
     if (!await roleManager.RoleExistsAsync("Admin"))
-    {
         await roleManager.CreateAsync(new IdentityRole("Admin"));
-    }
 
+    if (!await roleManager.RoleExistsAsync("Student"))
+        await roleManager.CreateAsync(new IdentityRole("Student"));
+
+    if (!await roleManager.RoleExistsAsync("Vendor"))
+        await roleManager.CreateAsync(new IdentityRole("Vendor"));
+
+    // Crear admin inicial si no existe
     var email = "admin@polifood.com";
     var user = await userManager.FindByEmailAsync(email);
 
@@ -116,17 +140,18 @@ static async Task SeedUsersAndRoles(
     }
 }
 
-
-// Configure the HTTP request pipeline.
+// =========================
+// PIPELINE
+// =========================
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    // Agregamos la inicialización de Scalar (Documentación)
     app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
