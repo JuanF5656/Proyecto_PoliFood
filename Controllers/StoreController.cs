@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
+using Polifood.Models;
 
 namespace Polifood.Controllers
 {
@@ -19,11 +20,11 @@ namespace Polifood.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+
         public async Task<IActionResult> GetAll() => Ok(await _storeService.GetAll());
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
+
         public async Task<IActionResult> getById(Guid id)
         {
             var store = await _storeService.getById(id);

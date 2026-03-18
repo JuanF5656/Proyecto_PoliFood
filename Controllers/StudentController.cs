@@ -32,5 +32,27 @@ namespace Polifood.Controllers
             var createdClient = await _studentService.Create(newStudent);
             return Ok(createdClient);
         }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getById(Guid id)
+        {
+            var student = await _studentService.getById(id);
+            return student != null ? Ok(student) : NotFound();
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Edit(Guid id, [FromBody] Student editedStudent)
+        {
+
+            return await _studentService.Update(id, editedStudent) ? NoContent() : NotFound();
+        }
+
+        [HttpPatch("{id}/change-status")]
+        public async Task<IActionResult> ChangeStatus(Guid id)
+        {
+            return await _studentService.ChangeStatus(id) ? Ok("Se ha cambiado el estado del estudiante") : NotFound();
+        }
     }
 }
