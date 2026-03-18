@@ -8,7 +8,7 @@ namespace Polifood.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Student")]
     public class CartController : Controller
     {
         private readonly ICartService _cartService;

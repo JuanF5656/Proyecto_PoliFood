@@ -6,6 +6,7 @@ namespace Polifood.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Student, Admin")]
     public class StoreController : Controller
     {
         private readonly IStoreService _storeService;
