@@ -42,7 +42,17 @@ public class AuthController : ControllerBase
 
         if (token != null)
         {
-            return Ok(new { Token = token });
+            // Obtenemos el rol real del usuario desde Identity
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            var roles = await _userManager.GetRolesAsync(user!);
+            var role = roles.FirstOrDefault() ?? "Student";
+
+            return Ok(new
+            {
+                Token = token,
+                Role = role,
+                Email = model.Email
+            });
         }
 
         return Unauthorized(new { Message = "Credenciales incorrectas." });
