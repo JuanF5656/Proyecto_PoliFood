@@ -18,17 +18,26 @@ namespace Polifood.Services
         {
             return await _context.Cart
                 .Include(c => c.items)
-                    .ThenInclude(i => i.Product)  // ← también aquí
+                    .ThenInclude(i => i.Product)
                 .Where(e => e.is_active == 1)
                 .ToListAsync();
         }
 
-        // ── Fix principal: siempre cargar items con Include ──────────────────
+        // ── Nuevo: filtrar por userId ─────────────────────────────────────────
+        public async Task<List<Cart>> GetByUserId(string userId)
+        {
+            return await _context.Cart
+                .Include(c => c.items)
+                    .ThenInclude(i => i.Product)
+                .Where(c => c.is_active == 1 && c.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task<Cart> getById(Guid id)
         {
             return await _context.Cart
                 .Include(c => c.items)
-                    .ThenInclude(i => i.Product)  // ← incluir el producto de cada item
+                    .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -75,7 +84,6 @@ namespace Polifood.Services
             }
             else
             {
-                // INSERT directo sin pasar por el change tracker del carrito
                 var newItem = new CartItem
                 {
                     Id = Guid.NewGuid(),
@@ -123,7 +131,6 @@ namespace Polifood.Services
 
         public async Task<Order> Checkout(Guid cartId)
         {
-            // Limpiar el change tracker para evitar conflictos con entidades del seed
             _context.ChangeTracker.Clear();
 
             var cart = await _context.Cart
@@ -138,7 +145,6 @@ namespace Polifood.Services
             var total = cart.items.Sum(i => i.UnitPrice * i.Quantity);
             var orderId = Guid.NewGuid();
 
-            // 1. Insertar Order primero
             var order = new Order
             {
                 Id = orderId,
@@ -150,7 +156,6 @@ namespace Polifood.Services
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
 
-            // 2. Insertar OrderItems después
             var orderItems = cart.items.Select(i => new OrderItem
             {
                 orderItem_id = Guid.NewGuid(),
@@ -164,6 +169,14 @@ namespace Polifood.Services
 
             await _context.OrderItem.AddRangeAsync(orderItems);
             await _context.SaveChangesAsync();
+
+            // Desactivar el carrito después del checkout
+            var cartToDeactivate = await _context.Cart.FindAsync(cartId);
+            if (cartToDeactivate != null)
+            {
+                cartToDeactivate.is_active = 0;
+                await _context.SaveChangesAsync();
+            }
 
             order.orderItems = orderItems;
             return order;

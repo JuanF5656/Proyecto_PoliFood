@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Polifood.Interfaces;
 using Polifood.Models;
 using Polifood.Models.DTOs;
+using System.Security.Claims;
 
 namespace Polifood.Controllers
 {
@@ -23,21 +24,29 @@ namespace Polifood.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAll() => Ok(await _cartService.GetAll());
+        public async Task<IActionResult> GetAll()
+        {
+            // Filtrar por usuario autenticado
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return Unauthorized();
+
+            var carts = await _cartService.GetByUserId(userId);
+            return Ok(carts);
+        }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> getById(Guid id)
         {
             var cart = await _cartService.getById(id);
             return cart != null ? Ok(cart) : NotFound();
-
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Cart newCart)
         {
+            // Asignar el userId del token al carrito nuevo
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId != null) newCart.UserId = userId;
 
             var createdCart = await _cartService.Create(newCart);
             return CreatedAtAction(nameof(getById), new { id = createdCart.Id }, createdCart);
@@ -46,7 +55,6 @@ namespace Polifood.Controllers
         [HttpPut]
         public async Task<IActionResult> Edit(Guid id, [FromBody] Cart editedCart)
         {
-
             return await _cartService.Update(id, editedCart) ? NoContent() : NotFound();
         }
 
@@ -64,9 +72,9 @@ namespace Polifood.Controllers
         }
 
         [HttpDelete("{id}/remove-item/{product_id}")]
-        public async Task<IActionResult> RemoveItem(Guid id, Guid productId)
+        public async Task<IActionResult> RemoveItem(Guid id, Guid product_id)
         {
-            var success = await _cartService.RemoveItem(id, productId);
+            var success = await _cartService.RemoveItem(id, product_id);
             return success ? Ok() : NotFound();
         }
 
@@ -90,6 +98,5 @@ namespace Polifood.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
