@@ -214,9 +214,11 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
 
 app.UseCors("FrontendPolicy");   // CORS debe ir antes de auth
+// app.UseHttpsRedirection(); // comentado para desarrollo local
+
+
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -3,7 +3,6 @@ using Polifood.Interfaces;
 using Polifood.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Polifood.Services
 {
     public class CartService : ICartService
@@ -17,15 +16,22 @@ namespace Polifood.Services
 
         public async Task<List<Cart>> GetAll()
         {
-            return await _context.Cart.Where(e => e.is_active == 1).ToListAsync();
+            return await _context.Cart
+                .Include(c => c.items)
+                .Where(e => e.is_active == 1)
+                .ToListAsync();
         }
 
-        public async Task<Cart> getById(Guid id) => await _context.Cart.FindAsync(id);
-
+        // ── Fix principal: siempre cargar items con Include ──────────────────
+        public async Task<Cart> getById(Guid id)
+        {
+            return await _context.Cart
+                .Include(c => c.items)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
 
         public async Task<Cart> Create(Cart newCart)
         {
-            //Agregamos el registro a la lista
             _context.Cart.Add(newCart);
             await _context.SaveChangesAsync();
             return newCart;
@@ -33,27 +39,21 @@ namespace Polifood.Services
 
         public async Task<bool> Update(Guid id, Cart editCart)
         {
-            //validar la existencia de un ente supremo
-            var CartExist = await getById(id);
-            if (CartExist == null) return false;
+            var cartExist = await getById(id);
+            if (cartExist == null) return false;
 
-            CartExist.items = editCart.items;
-
+            cartExist.items = editCart.items;
             await _context.SaveChangesAsync();
-
             return true;
         }
 
         public async Task<bool> ChangeStatus(Guid id)
         {
-            // Verificamos si existe o no el registro
             var existe = await getById(id);
             if (existe == null) return false;
 
             existe.is_active = existe.is_active == 1 ? 0 : 1;
-
             await _context.SaveChangesAsync();
-
             return true;
         }
 
@@ -67,9 +67,20 @@ namespace Polifood.Services
 
             var existingItem = cart.items.FirstOrDefault(i => i.ProductId == product_id);
             if (existingItem != null)
+            {
+                // El item ya existe — solo actualizamos cantidad
                 existingItem.Quantity += quantity;
+            }
             else
-                cart.items.Add(new CartItem { ProductId = product_id, Quantity = quantity, UnitPrice = product.product_price });
+            {
+                // Item nuevo — INSERT correcto gracias al Include
+                cart.items.Add(new CartItem
+                {
+                    ProductId = product_id,
+                    Quantity = quantity,
+                    UnitPrice = product.product_price
+                });
+            }
 
             await _context.SaveChangesAsync();
             return true;
@@ -96,8 +107,10 @@ namespace Polifood.Services
             var item = cart.items.FirstOrDefault(i => i.ProductId == productId);
             if (item == null) return false;
 
-            if (quantity <= 0) cart.items.Remove(item);
-            else item.Quantity = quantity;
+            if (quantity <= 0)
+                cart.items.Remove(item);
+            else
+                item.Quantity = quantity;
 
             await _context.SaveChangesAsync();
             return true;
@@ -106,7 +119,8 @@ namespace Polifood.Services
         public async Task<Order> Checkout(Guid cartId)
         {
             var cart = await getById(cartId);
-            if (cart == null || !cart.items.Any()) throw new InvalidOperationException("Carrito vacio");
+            if (cart == null || !cart.items.Any())
+                throw new InvalidOperationException("Carrito vacio");
 
             var total = cart.items.Sum(i => i.UnitPrice * i.Quantity);
 
@@ -130,9 +144,5 @@ namespace Polifood.Services
 
             return order;
         }
-        }
-
-
-
     }
-
+}
