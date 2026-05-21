@@ -18,6 +18,7 @@ namespace Polifood.Services
         {
             return await _context.Cart
                 .Include(c => c.items)
+                    .ThenInclude(i => i.Product)  // ← también aquí
                 .Where(e => e.is_active == 1)
                 .ToListAsync();
         }
@@ -27,6 +28,7 @@ namespace Polifood.Services
         {
             return await _context.Cart
                 .Include(c => c.items)
+                    .ThenInclude(i => i.Product)  // ← incluir el producto de cada item
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -68,21 +70,24 @@ namespace Polifood.Services
             var existingItem = cart.items.FirstOrDefault(i => i.ProductId == product_id);
             if (existingItem != null)
             {
-                // El item ya existe — solo actualizamos cantidad
                 existingItem.Quantity += quantity;
+                await _context.SaveChangesAsync();
             }
             else
             {
-                // Item nuevo — INSERT correcto gracias al Include
-                cart.items.Add(new CartItem
+                // INSERT directo sin pasar por el change tracker del carrito
+                var newItem = new CartItem
                 {
+                    Id = Guid.NewGuid(),
+                    CartId = cartId,
                     ProductId = product_id,
                     Quantity = quantity,
                     UnitPrice = product.product_price
-                });
+                };
+                await _context.CartItem.AddAsync(newItem);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -118,23 +123,26 @@ namespace Polifood.Services
 
         public async Task<Order> Checkout(Guid cartId)
         {
-            var cart = await getById(cartId);
+            // Limpiar el change tracker para evitar conflictos con entidades del seed
+            _context.ChangeTracker.Clear();
+
+            var cart = await _context.Cart
+                .Include(c => c.items)
+                    .ThenInclude(i => i.Product)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == cartId);
+
             if (cart == null || !cart.items.Any())
                 throw new InvalidOperationException("Carrito vacio");
 
             var total = cart.items.Sum(i => i.UnitPrice * i.Quantity);
+            var orderId = Guid.NewGuid();
 
+            // 1. Insertar Order primero
             var order = new Order
             {
-                Id = Guid.NewGuid(),
+                Id = orderId,
                 CartId = cart.Id,
-                orderItems = cart.items.Select(i => new OrderItem
-                {
-                    product_id = i.ProductId,
-                    Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice,
-                    Subtotal = i.UnitPrice * i.Quantity
-                }).ToList(),
                 Total = total,
                 status = OrderStatus.Received
             };
@@ -142,6 +150,22 @@ namespace Polifood.Services
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
 
+            // 2. Insertar OrderItems después
+            var orderItems = cart.items.Select(i => new OrderItem
+            {
+                orderItem_id = Guid.NewGuid(),
+                OrderId = orderId,
+                product_id = i.ProductId,
+                Quantity = i.Quantity,
+                UnitPrice = i.UnitPrice,
+                Subtotal = i.UnitPrice * i.Quantity,
+                is_active = 1
+            }).ToList();
+
+            await _context.OrderItem.AddRangeAsync(orderItems);
+            await _context.SaveChangesAsync();
+
+            order.orderItems = orderItems;
             return order;
         }
     }
