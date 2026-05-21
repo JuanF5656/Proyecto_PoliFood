@@ -9,7 +9,7 @@ using Polifood.Models;
 using Polifood.Services;
 using Scalar.AspNetCore;
 using System.Text;
-//cambiesito
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -101,50 +101,107 @@ static async Task SeedUsersAndRoles(
     RoleManager<IdentityRole> roleManager,
     ApplicationDbContext dbContext)
 {
-    // Crear roles si no existen
-    if (!await roleManager.RoleExistsAsync("Admin"))
-        await roleManager.CreateAsync(new IdentityRole("Admin"));
-
-    if (!await roleManager.RoleExistsAsync("Student"))
-        await roleManager.CreateAsync(new IdentityRole("Student"));
-
-    if (!await roleManager.RoleExistsAsync("Vendor"))
-        await roleManager.CreateAsync(new IdentityRole("Vendor"));
-
-    // Crear admin inicial si no existe
-    var email = "admin@polifood.com";
-    var user = await userManager.FindByEmailAsync(email);
-
-    if (user == null)
+    // ── Roles ──────────────────────────────────────────────────────────────
+    foreach (var role in new[] { "Admin", "Student", "Vendor" })
     {
-        user = new IdentityUser
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    // ── Admin ──────────────────────────────────────────────────────────────
+    await SeedAdmin(userManager, dbContext);
+
+    // ── Student de prueba ──────────────────────────────────────────────────
+    await SeedStudent(userManager, dbContext);
+
+    // ── Vendor de prueba ───────────────────────────────────────────────────
+    await SeedVendor(userManager, dbContext);
+}
+
+static async Task SeedAdmin(
+    UserManager<IdentityUser> userManager,
+    ApplicationDbContext dbContext)
+{
+    const string email = "admin@polifood.com";
+    const string password = "Admin123*";
+
+    if (await userManager.FindByEmailAsync(email) != null) return;
+
+    var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+    var result = await userManager.CreateAsync(user, password);
+
+    if (!result.Succeeded) return;
+
+    await userManager.AddToRoleAsync(user, "Admin");
+
+    if (!await dbContext.Admin.AnyAsync(a => a.IdentityUserId == user.Id))
+    {
+        dbContext.Admin.Add(new Admin
         {
-            UserName = email,
-            Email = email,
-            EmailConfirmed = true
-        };
+            admin_id = Guid.Parse("11111111-1111-1111-1111-111111111112"),
+            name_admin = "Admin Polifood",
+            is_active = 1,
+            IdentityUserId = user.Id
+        });
+        await dbContext.SaveChangesAsync();
+    }
+}
 
-        var result = await userManager.CreateAsync(user, "Admin123*");
+static async Task SeedStudent(
+    UserManager<IdentityUser> userManager,
+    ApplicationDbContext dbContext)
+{
+    const string email = "student@polifood.com";
+    const string password = "Student123*";
 
-        if (result.Succeeded)
+    if (await userManager.FindByEmailAsync(email) != null) return;
+
+    var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+    var result = await userManager.CreateAsync(user, password);
+
+    if (!result.Succeeded) return;
+
+    await userManager.AddToRoleAsync(user, "Student");
+
+    if (!await dbContext.Student.AnyAsync(s => s.IdentityUserId == user.Id))
+    {
+        dbContext.Student.Add(new Student
         {
-            await userManager.AddToRoleAsync(user, "Admin");
+            student_id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+            student_name = "Estudiante Polifood",
+            is_active = 1,
+            IdentityUserId = user.Id
+        });
+        await dbContext.SaveChangesAsync();
+    }
+}
 
-            var adminExiste = await dbContext.Admin.AnyAsync(a => a.IdentityUserId == user.Id);
+static async Task SeedVendor(
+    UserManager<IdentityUser> userManager,
+    ApplicationDbContext dbContext)
+{
+    const string email = "vendor@polifood.com";
+    const string password = "Vendor123*";
 
-            if (!adminExiste)
-            {
-                dbContext.Admin.Add(new Admin
-                {
-                    admin_id = Guid.Parse("11111111-1111-1111-1111-111111111112"),
-                    name_admin = "Simon",
-                    is_active = 1,
-                    IdentityUserId = user.Id
-                });
+    if (await userManager.FindByEmailAsync(email) != null) return;
 
-                await dbContext.SaveChangesAsync();
-            }
-        }
+    var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+    var result = await userManager.CreateAsync(user, password);
+
+    if (!result.Succeeded) return;
+
+    await userManager.AddToRoleAsync(user, "Vendor");
+
+    if (!await dbContext.Vendor.AnyAsync(v => v.IdentityUserId == user.Id))
+    {
+        dbContext.Vendor.Add(new Vendor
+        {
+            vendor_id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+            vendor_name = "Vendedor Polifood",
+            is_active = 1,
+            IdentityUserId = user.Id
+        });
+        await dbContext.SaveChangesAsync();
     }
 }
 
